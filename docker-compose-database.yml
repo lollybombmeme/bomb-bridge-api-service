@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 
+      MONGO_INITDB_ROOT_PASSWORD: 
+    ports:
+      - "27017:27017"
+    networks:
+      - bomb_network
+    volumes:
+      - mongodb_data:/data/db
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - bomb_network
+    volumes:
+      - redis_data:/data
+
+networks:
+  bomb_network:
+    external: true
+
+volumes:
+  mongodb_data:
+  redis_data:

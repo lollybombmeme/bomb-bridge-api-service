@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+
+  bnb-bridge-api:
+    container_name: bnb-bridge-api
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - 7001:5005
+    command: gunicorn --bind 0.0.0.0:5005 --workers=1 main:app --log-level=debug -c conf/gunicorn.py --timeout 0
+
+  bnb-bridge-worker:
+    container_name: bnb-bridge-worker
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: always
+    command: celery --app worker worker -Q bomb-bridge-queue -l INFO -c 4
+
+networks:
+  bomb_network:
+    external: true
